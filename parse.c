@@ -17,5 +17,22 @@ char* read_line(){
     return line;
 }
 char** parse_line(char* line){
+    int bufsize = 64;
+    int position = 0;
+    char** tokens = malloc(sizeof(char*) * bufsize);
+
+    if (!tokens){
+        perror("malloc");
+        return NULL;
+    }
+    char* token = strtok(line, " \t\n");
     
+    while (token != NULL){
+        tokens[position++] = token;
+        
+        if (position >= bufsize){
+            bufsize *= 2;
+            tokens = realloc(tokens, sizeof(char*) * bufsize);
+        }
+    }
 }

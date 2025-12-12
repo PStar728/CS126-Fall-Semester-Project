@@ -4,6 +4,7 @@
 #include "parse.h"
 
 char* read_line(){
+    //i dont think we need
     char* line = NULL;
     size_t size = 0;
 

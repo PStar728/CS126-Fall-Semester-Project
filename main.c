@@ -24,10 +24,13 @@ int main(){
             fgets(line, sizeof(line), stdin);
         }
 
+
+        //added declarations for the redirections
+        char* redirFile = NULL;
         //parses lines into tokens
-        char** tokens  = parse_line(line);
+        char** tokens  = parse_line(line, &redirFile);
         // executes tokens          i have no idea what that output is yet
-        int x = execute_command(tokens);
+        int x = execute_command(tokens, &redirFile);
         if (x == 2){
             break;
         }

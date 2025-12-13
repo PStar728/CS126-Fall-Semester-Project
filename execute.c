@@ -15,7 +15,7 @@
 - If execvp() fails, print an error using perror().     yep
 */
 
-int execute_command(char** argv){
+int execute_command(char** argv, char** redirFile){
     if (argv[0] == NULL){
         //idk what this is yet
         return 1;
@@ -45,6 +45,10 @@ int execute_command(char** argv){
         return 1;
     }
     if (pid == 0){
+        // child
+        if (redirFile != NULL){
+            redirect(argv, &redirFile);
+        }
         execvp(argv[0], argv);
         perror("execvp");
         exit(1);

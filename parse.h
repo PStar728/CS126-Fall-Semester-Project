@@ -2,6 +2,6 @@
 #define PARSE_H
 
 char* read_line();
-char** parse_line(char* line);
+char** parse_line(char* line, char** redirFile);
 
 #endif

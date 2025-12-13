@@ -28,6 +28,11 @@ int execute_command(char** argv, char** redirFile){
         return 2;
     }
 
+    if (srtcmp(redirFile, "pipe") == 0){
+        pipe(argv);
+        return 2;
+    }
+
     // this section should be in builtin.c
     /*if (strcmp(argv[0], "cd") == 0){
         const char *path = (argv[1] ? argv[1] : getenv("HOME"));
@@ -46,6 +51,7 @@ int execute_command(char** argv, char** redirFile){
     }
     if (pid == 0){
         // child
+        signal(SIGINT, SIG_DFL); 
         if (redirFile != NULL){
             redirect(argv, &redirFile);
         }

@@ -1,9 +1,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 #include "parse.h"
 #include "execute.h"
 #include "builtin.h"
+#include "signals.h"
 
 
 /*2.1 Shell Main Loop
@@ -15,6 +17,9 @@
 - Exit the shell when the user types exit or quit.              yep
 */           
 int main(){
+
+    signal(SIGINT, SIG_IGN);
+    signal(SIGCHLD, sigchldHandler);
 
     while (1){
         printf("myshell> ");

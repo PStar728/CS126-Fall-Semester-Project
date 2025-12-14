@@ -2,11 +2,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <signal.h>
+
+
+
 #include "parse.h"
 #include "execute.h"
-#include "builtin.h"
 #include "signals.h"
 
+//
 
 /*2.1 Shell Main Loop
 - Display a prompt exactly as: myshell>  (myshell, >, space).   yep
@@ -17,6 +20,11 @@
 - Exit the shell when the user types exit or quit.              yep
 */           
 int main(){
+    FILE *logfile = fopen("myshell.log", "a");
+    if (!logfile){
+        perror("fopen");
+        exit(1);
+    }
 
     signal(SIGINT, SIG_IGN);
     signal(SIGCHLD, sigchldHandler);
@@ -35,7 +43,7 @@ int main(){
         //parses lines into tokens
         char** tokens  = parse_line(line, &redirFile);
         // executes tokens          i have no idea what that output is yet
-        int x = execute_command(tokens, &redirFile);
+        int x = execute_command(tokens, &redirFile, &logfile, line);
         if (x == 2){
             break;
         }

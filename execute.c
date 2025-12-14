@@ -5,6 +5,7 @@
 #include <sys/wait.h>
 
 #include "execute.h"
+#include "redirection.h"
 #include "builtin.h"
 /*
 - Implementation:
@@ -15,7 +16,7 @@
 - If execvp() fails, print an error using perror().     yep
 */
 
-int execute_command(char** argv, char** redirFile){
+int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
     if (argv[0] == NULL){
         //idk what this is yet
         return 1;
@@ -29,7 +30,7 @@ int execute_command(char** argv, char** redirFile){
     }
 
     if (srtcmp(redirFile, "pipe") == 0){
-        pipe(argv);
+        runpipe(argv);
         return 2;
     }
 
@@ -59,18 +60,32 @@ int execute_command(char** argv, char** redirFile){
         perror("execvp");
         exit(1);
     }
-
-    int status;
-
     int isbackground = 0;
     for (int i = 0; argv[i] != NULL; i++){
         if (argv[i] == "&"){
             isbackground = 1;
         }
     }
+
+    int status;
+    int exit_code;
+
     if (isbackground == 0){
         waitpid(pid, &status, 0);
     }
+
+    if (WIFEXITED(status)) {
+        exit_code = WEXITSTATUS(status);
+    } else if (WIFSIGNALED(status)) {
+        exit_code = 128 + WTERMSIG(status);
+    }
+
+    char logbuf[1024];
+    int len = snprintf(logbuf, sizeof(logbuf), 
+        "PID=%d CMD=\"%s\" EXIT=%d\n", pid, line, exit_code);
+
+    write(logfile, logbuf, len);
+
 
     return 1;
 }

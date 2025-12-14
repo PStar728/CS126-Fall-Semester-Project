@@ -24,9 +24,12 @@ int execute_command(char** argv, char* redirOpp, char* redirFile, FILE* logfile,
 
     int x = builtin(argv);
     // if x != 0 argv is a built in code and can stop
-    if (x != 0){
+    if (x == 2){
         // 2 is a special break number quits the program
         return 2;
+    }
+    if (x !=0 ){
+        return 1;
     }
 
     if (redirOpp != NULL && strcmp(redirOpp, "pipe") == 0){

@@ -46,6 +46,19 @@ int main(){
         char** tokens  = parse_line(line, &redirOpp, &redirFile);
         // executes tokens
         int x = execute_command(tokens, redirOpp, redirFile, logfile, line);
+        free(line);
+        if (tokens){
+            for (int i = 0; tokens[i] != NULL; i++){
+                free(tokens[i]);
+            }
+            free(tokens);
+        }
+        if (redirOpp) {
+            free(redirOpp);
+        }
+        if (redirFile) {
+            free(redirFile);
+        }
         if (x == 2){
             break;
         }

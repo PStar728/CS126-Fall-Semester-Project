@@ -50,6 +50,14 @@ int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
         perror("fork");
         return 1;
     }
+    int isbackground = 0;
+    for (int i = 0; argv[i] != NULL; i++){
+        if (strcmp(argv[i], "&") == 0){
+            isbackground = 1;
+            argv[i] = NULL;
+            break;
+        }
+    }
     if (pid == 0){
         // child
         signal(SIGINT, SIG_DFL); 
@@ -59,12 +67,6 @@ int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
         execvp(argv[0], argv);
         perror("execvp");
         exit(1);
-    }
-    int isbackground = 0;
-    for (int i = 0; argv[i] != NULL; i++){
-        if (strcmp(argv[i], "&") == 0){
-            isbackground = 1;
-        }
     }
 
     int status;

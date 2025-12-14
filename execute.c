@@ -31,7 +31,6 @@ int execute_command(char** argv, char* redirOpp, char* redirFile, FILE* logfile,
 
     if (redirOpp != NULL && strcmp(redirOpp, "pipe") == 0){
         runpipe(argv);
-        return 2;
     }
 
     // this section should be in builtin.c

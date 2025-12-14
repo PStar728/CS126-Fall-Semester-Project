@@ -23,7 +23,7 @@ void redirection(char** tokens, char** redirFile){
     int fd;
     for (int i = 0; tokens[i] != NULL; i++){
         if (strcmp(tokens[i], "<") == 0){
-            fd = open(redirFile, O_RDONLY);
+            fd = open(*redirFile, O_RDONLY);
             if (fd < 0) {
                 perror(redirFile);
                 exit(1);

@@ -16,7 +16,7 @@
 - If execvp() fails, print an error using perror().     yep
 */
 
-int execute_command(char** argv, char* redirFile, FILE* logfile, char* line){
+int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
     if (argv[0] == NULL){
         //idk what this is yet
         return 1;

@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "redirection.h"
 
@@ -51,7 +52,6 @@ void redirection(char** tokens, char** redirFile){
             }
             dup2(fd, STDOUT_FILENO);
         }
-        return NULL;
     }
 }
 void runpipe(char** tokens){

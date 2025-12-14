@@ -6,18 +6,20 @@
 #include "parse.h"
 #include "redirection.h"
 
-char* read_line(){
-    //i dont think we need
-    char* line = NULL;
-    size_t size = 0;
+char* read_line(){  
+    size_t size = 1024;
+    char* line = malloc(size);
 
-    ssize_t len = getline(&line, &size, stdin);
+    if (!line) {
+        perror("malloc");
+        return NULL;
+    }
 
-    if (len == -1) {
+    if (fgets(line, size, stdin) == NULL) {
         free(line);
         return NULL;
-        perror("get line in parse");
     }
+
     return line;
 }
 char** parse_line(char* line, char** redirFile){
@@ -40,7 +42,7 @@ char** parse_line(char* line, char** redirFile){
 
         token = strtok(NULL, " \t\n");
     }
-    token[position] = NULL;
+    tokens[position] = NULL;
     *redirFile = redirectionCheck(tokens);
     return tokens;
 }

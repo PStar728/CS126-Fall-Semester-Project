@@ -15,8 +15,8 @@ char* redirectionCheck(char** argv){
         if (strcmp(argv[i], "|") == 0){
             return "pipe";
         }
-        return NULL;
     }
+    return NULL;
 }
 void redirection(char** tokens, char** redirFile){
     int fd;

@@ -32,9 +32,9 @@ int main(){
     while (1){
         printf("myshell> ");
         char* line;
-        fgets(line, sizeof(line), stdin);
+        line = read_line();
         while (line == NULL){
-            fgets(line, sizeof(line), stdin);
+            line = read_line();
         }
 
 
@@ -43,7 +43,7 @@ int main(){
         //parses lines into tokens
         char** tokens  = parse_line(line, &redirFile);
         // executes tokens          i have no idea what that output is yet
-        int x = execute_command(tokens, &redirFile, &logfile, line);
+        int x = execute_command(tokens, &redirFile, logfile, line);
         if (x == 2){
             break;
         }

@@ -4,7 +4,7 @@
 
 #include "signals.h"
 
-sigchldHandler(int sig){
+void sigchldHandler(int sig){
     (void)sig;
     int status;
 

@@ -1,5 +1,9 @@
-#include "builtin.h"
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <stdio.h>
+
+#include "builtin.h"
 
 /*At least:
 - exit or quit: terminate the shell (no fork).                          yep

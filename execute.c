@@ -16,7 +16,7 @@
 - If execvp() fails, print an error using perror().     yep
 */
 
-int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
+int execute_command(char** argv, char* redirFile, FILE* logfile, char* line){
     if (argv[0] == NULL){
         //idk what this is yet
         return 1;
@@ -29,7 +29,7 @@ int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
         return 2;
     }
 
-    if (srtcmp(redirFile, "pipe") == 0){
+    if (strcmp(redirFile, "pipe") == 0){
         runpipe(argv);
         return 2;
     }
@@ -54,7 +54,7 @@ int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
         // child
         signal(SIGINT, SIG_DFL); 
         if (redirFile != NULL){
-            redirect(argv, &redirFile);
+            redirection(argv, &redirFile);
         }
         execvp(argv[0], argv);
         perror("execvp");
@@ -62,7 +62,7 @@ int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
     }
     int isbackground = 0;
     for (int i = 0; argv[i] != NULL; i++){
-        if (argv[i] == "&"){
+        if (strcmp(argv[i], "&") == 0){
             isbackground = 1;
         }
     }
@@ -84,7 +84,8 @@ int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
     int len = snprintf(logbuf, sizeof(logbuf), 
         "PID=%d CMD=\"%s\" EXIT=%d\n", pid, line, exit_code);
 
-    write(logfile, logbuf, len);
+    int fd = fileno(logfile);
+    write(fd, logbuf, len);
 
 
     return 1;

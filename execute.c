@@ -16,7 +16,7 @@
 - If execvp() fails, print an error using perror().     yep
 */
 
-int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
+int execute_command(char** argv, char* redirOpp, char* redirFile, FILE* logfile, char* line){
     if (argv[0] == NULL){
         //idk what this is yet
         return 1;
@@ -29,7 +29,7 @@ int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
         return 2;
     }
 
-    if (strcmp(redirFile, "pipe") == 0){
+    if (redirOpp != NULL && strcmp(redirOpp, "pipe") == 0){
         runpipe(argv);
         return 2;
     }
@@ -61,16 +61,16 @@ int execute_command(char** argv, char** redirFile, FILE* logfile, char* line){
     if (pid == 0){
         // child
         signal(SIGINT, SIG_DFL); 
-        if (redirFile != NULL){
-            redirection(argv, &redirFile);
+        if (redirOpp != NULL && strcmp(redirOpp, "pipe") != 0){
+            redirection(argv, redirOpp, redirFile);
         }
         execvp(argv[0], argv);
         perror("execvp");
         exit(1);
     }
 
-    int status;
-    int exit_code;
+    int status = 0;
+    int exit_code = 0;
 
     if (isbackground == 0){
         waitpid(pid, &status, 0);

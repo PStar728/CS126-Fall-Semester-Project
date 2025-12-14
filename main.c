@@ -40,11 +40,12 @@ int main(){
 
 
         //added declarations for the redirections
+        char* redirOpp = NULL;
         char* redirFile = NULL;
         //parses lines into tokens
-        char** tokens  = parse_line(line, &redirFile);
-        // executes tokens          i have no idea what that output is yet
-        int x = execute_command(tokens, &redirFile, logfile, line);
+        char** tokens  = parse_line(line, &redirOpp, &redirFile);
+        // executes tokens
+        int x = execute_command(tokens, redirOpp, redirFile, logfile, line);
         if (x == 2){
             break;
         }

@@ -22,7 +22,7 @@ char* read_line(){
 
     return line;
 }
-char** parse_line(char* line, char** redirFile){
+char** parse_line(char* line, char** redirOpp, char** redirFile){
     int bufsize = 64;
     int position = 0;
     char** tokens = malloc(sizeof(char*) * bufsize);
@@ -43,6 +43,33 @@ char** parse_line(char* line, char** redirFile){
         token = strtok(NULL, " \t\n");
     }
     tokens[position] = NULL;
-    *redirFile = redirectionCheck(tokens);
+    // Find any pipe or redirection operator and extract filename/operator.
+    *redirOpp = NULL;
+    *redirFile = NULL;
+    for (int i = 0; tokens[i] != NULL; i++){
+        if (strcmp(tokens[i], "|") == 0){
+            // mark that there is a pipe; keep tokens intact so runpipe can find it
+            *redirOpp = "pipe";
+            break;
+        }
+        if (strcmp(tokens[i], "<") == 0 || strcmp(tokens[i], ">") == 0 || strcmp(tokens[i], ">>") == 0){
+            // operator is tokens[i], filename should be tokens[i+1]
+            *redirOpp = tokens[i];
+            if (tokens[i+1] != NULL){
+                *redirFile = tokens[i+1];
+            } else {
+                *redirFile = NULL;
+            }
+            // remove operator and filename by shifting later tokens left
+            int j = i;
+            while (tokens[j+2] != NULL){
+                tokens[j] = tokens[j+2];
+                j++;
+            }
+            // terminate the array at the new end
+            tokens[j] = NULL;
+            break;
+        }
+    }
     return tokens;
 }

@@ -11,7 +11,7 @@ char* redirectionCheck(char** argv){
         if (strcmp(argv[i], ">") == 0 ||
             strcmp(argv[i], "<") == 0 ||
             strcmp(argv[i], ">>") == 0){
-            return argv[i++];
+            return argv[i];
         }
         if (strcmp(argv[i], "|") == 0){
             return "pipe";
@@ -19,52 +19,59 @@ char* redirectionCheck(char** argv){
     }
     return NULL;
 }
-void redirection(char** tokens, char** redirFile){
+void redirection(char** tokens, const char* redirOpp, const char* redirFile){
+    (void)tokens;
+    if (redirOpp == NULL || redirFile == NULL) return;
+
     int fd;
-    for (int i = 0; tokens[i] != NULL; i++){
-        if (strcmp(tokens[i], "<") == 0){
-            fd = open(*redirFile, O_RDONLY);
-            if (fd < 0) {
-                perror(redirFile);
-                exit(1);
-            }
-            dup2(fd, STDIN_FILENO);
+    if (strcmp(redirOpp, "<") == 0){
+        fd = open(redirFile, O_RDONLY);
+        if (fd < 0) {
+            perror(redirFile);
+            exit(1);
         }
-        if (strcmp(tokens[i], ">") == 0){
-            fd = open(redirFile,
-                O_WRONLY | O_CREAT | O_TRUNC,
-                0644);
+        dup2(fd, STDIN_FILENO);
+        close(fd);
+        return;
+    }
 
-            if (fd < 0) {
-                perror(redirFile);
-                exit(1);
-            }
-            dup2(fd, STDOUT_FILENO);
+    if (strcmp(redirOpp, ">") == 0){
+        fd = open(redirFile,
+            O_WRONLY | O_CREAT | O_TRUNC,
+            0644);
+        if (fd < 0) {
+            perror(redirFile);
+            exit(1);
         }
-        if (strcmp(tokens[i], ">>") == 0){
-            fd = open(redirFile,
-                O_WRONLY | O_CREAT | O_APPEND,
-                0644);
+        dup2(fd, STDOUT_FILENO);
+        close(fd);
+        return;
+    }
 
-            if (fd < 0) {
-                perror(redirFile);
-                exit(1);
-            }
-            dup2(fd, STDOUT_FILENO);
+    if (strcmp(redirOpp, ">>") == 0){
+        fd = open(redirFile,
+            O_WRONLY | O_CREAT | O_APPEND,
+            0644);
+        if (fd < 0) {
+            perror(redirFile);
+            exit(1);
         }
+        dup2(fd, STDOUT_FILENO);
+        close(fd);
+        return;
     }
 }
 void runpipe(char** tokens){
     int fd[2];
     pipe(fd);
-    int pipeindex;
+    int pipeindex = -1;
     for (int i = 0; tokens[i] != NULL; i++){
         if (strcmp(tokens[i], "|") == 0){
             pipeindex = i;
             break;
         }
     }
-
+    if (pipeindex < 0) return;
     tokens[pipeindex] = NULL;
     char **leftcmd = tokens;
     char **rightcmd = &tokens[pipeindex + 1];

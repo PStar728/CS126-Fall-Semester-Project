@@ -16,7 +16,6 @@ char* read_line(){
     }
 
     if (fgets(line, size, stdin) == NULL) {
-        free(line);
         return NULL;
     }
 

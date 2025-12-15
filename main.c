@@ -48,16 +48,16 @@ int main(){
         int x = execute_command(tokens, redirOpp, redirFile, logfile, line);
         free(line);
         if (tokens){
-            for (int i = 0; tokens[i] != NULL; i++){
-                free(tokens[i]);
-            }
+            //for (int i = 0; tokens[i] != NULL; i++){
+              //  free(tokens[i]);
+            //}
             free(tokens);
         }
         if (redirOpp) {
-            free(redirOpp);
+            //free(redirOpp);
         }
         if (redirFile) {
-            free(redirFile);
+            //free(redirFile);
         }
         if (x == 2){
             break;

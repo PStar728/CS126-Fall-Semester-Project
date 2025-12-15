@@ -14,7 +14,8 @@ Linux OS, GCC compiler, standard C libraries
 
 -Incomplete Features: 
 You can only pipe one command into another, any more pipes will not work. 
-
+While testing, encountered a bug that will add 'exit' or 'quit' into the prompt and make it unable to exit.Unable to recreate it after figuring this out. 
+Does not include the helpful linux feature of pressing the up arrow and getting to view your previously typed command.
 -Sample Commands:
 ls
 cd /home/yourdirectoryname
